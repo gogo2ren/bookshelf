@@ -1,5 +1,5 @@
 import { Book } from ".";
-
+// TODO: DBから取得するデータの代わりなので不要になったら削除
 export const books: Book[] = [
   {
     id: 1,

@@ -4,5 +4,5 @@ export interface Book {
   author: string;
   label: string;
   state: string;
-  [key: string]: any; // インデックスシグネチャを追加
+  [key: string]: any;
 }
