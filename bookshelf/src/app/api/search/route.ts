@@ -4,9 +4,10 @@ import { books } from "../../../../_mock/books";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query")?.toLowerCase() || "";
+  const key = searchParams.get("key") || "name";
 
   const filteredBooks = books.filter((book) =>
-    book.name.toLowerCase().includes(query)
+    book[key].toLowerCase().includes(query)
   );
 
   if (filteredBooks.length === 0) {

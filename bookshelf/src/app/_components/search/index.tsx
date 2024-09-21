@@ -5,9 +5,10 @@ import { useState } from "react";
 export const SearchKey = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchKey, setSearchKey] = useState<string>("name");
 
   async function getBooks() {
-    const res = await fetch(`/api/search?query=${searchTerm}`);
+    const res = await fetch(`/api/search?query=${searchTerm}&key=${searchKey}`);
     const data = await res.json();
     console.log(data); // ここでデータを確認
     if (Array.isArray(data)) {
@@ -22,9 +23,13 @@ export const SearchKey = () => {
     setSearchTerm(event.target.value);
   };
 
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSearchKey(event.target.value);
+  };
+
   const SearchButton = () => {
     return (
-      <button type="button" onClick={getBooks} style={{ backgroundColor: 'white', color: 'black' }}>検索</button>
+      <button type="button" onClick={getBooks}style={{ backgroundColor: 'white', color: 'black' }}>検索</button>
     );
   };
 
@@ -33,7 +38,13 @@ export const SearchKey = () => {
       <div>
         <h1>検索ボックス</h1>
         <form>
-          <input type="text" value={searchTerm} onChange={handleInputChange}  style={{ color: 'black' }} />
+          <input type="text" value={searchTerm} onChange={handleInputChange}  style={{ color: 'black' }}/>
+          <select value={searchKey} onChange={handleSelectChange} style={{ color: 'black' }}>
+            <option value="name">名前</option>
+            <option value="author">著者</option>
+            <option value="label">ラベル</option>
+            <option value="state">状態</option>
+          </select>
         </form>
         <SearchButton />
       </div>

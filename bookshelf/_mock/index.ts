@@ -1,7 +1,8 @@
-export type Book = {
-  id: string;
+export interface Book {
+  id: number;
   name: string;
   author: string;
   label: string;
   state: string;
-};
+  [key: string]: any; // インデックスシグネチャを追加
+}
