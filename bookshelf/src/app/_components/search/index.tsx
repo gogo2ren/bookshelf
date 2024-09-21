@@ -1,83 +1,72 @@
-"use client"
-
+"use client";
 import { Book } from "../../../../type";
 import { useState } from "react";
 
 export const SearchKey = () => {
-    const [books,setBooks] = useState<Book[] | null>(null);
+    const [books, setBooks] = useState<Book[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     async function getBooks() {
-        const res = await fetch(
-          "/api/search",
-        ).then((res) => res.json())
-        .then(books =>{
-            setBooks(books)
-        })
-      }
+        // const res = await fetch(`/api/search?query=${searchTerm}`);
+        const res = await fetch(`/api/search`);
+        const data = await res.json();
+        console.log(data); // ここでデータを確認
+        if (Array.isArray(data)) {
+            setBooks(data);
+        } else {
+            console.error("API response is not an array:", data);
+            setBooks([]);
+        }
+    }
+    
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
 
     const SearchButton = () => {
-
         return (
-            <button type="submit" onClick={getBooks}>検索</button>//TODO: 検索ボックスの値を取得 
-        )
-    }
+            <button type="button" onClick={getBooks}>検索</button>
+        );
+    };
+
     return (
-        <><div>
-            <h1>検索ボックス</h1>
-            <form>
-                <input type="text" />
-            </form>
+        <>
+            <div>
+                <h1>検索ボックス</h1>
+                <form>
+                    <input type="text" value={searchTerm} onChange={handleInputChange} />
+                </form>
+                <SearchButton />
             </div>
-            <SearchButton />
-        <table>
+            <table>
                 <thead>
                     <tr>
-                    <th>id</th>
-                    <th>name</th>
-                    <th>author</th>
-                    <th>label</th>
-                    <th>state</th>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>author</th>
+                        <th>label</th>
+                        <th>state</th>
                     </tr>
                 </thead>
-        {books ? (
-          Object.values(books).map((book) => (
-            <tbody>
-            <tr key={book.id}>
-              <td>{book.id}</td>
-              <td>{book.name}</td>
-              <td>{book.author}</td>
-              <td>{book.label}</td>
-              <td>{book.state}</td>
-            </tr>
-      </tbody>
-          ))
-        ) : (
-           <tbody><tr><><td>{""}</td><td>{""}</td><td>{""}</td><td>{""}</td><td>{""}</td></></tr></tbody> 
-        )}
-
- </table></>)
-}
-                {/* <tbody>
-        {books ?Object.values(books).map((book) => (
-          <tr key={book.id}>
-            <td>{book.id}</td>
-            <td>{book.name}</td>
-            <td>{book.author}</td>
-            <td>{book.label}</td>
-            <td>{book.state}</td>
-          </tr>
-        )):}
-        </tbody> */}
-// export const SearchCategory = ()=>{
-//     return(
-//         <><label for="ice-cream-choice">Choose a flavor:</label><input list="ice-cream-flavors" id="ice-cream-choice" name="ice-cream-choice">
-
-//             <datalist id="ice-cream-flavors">
-//                 <option value="Chocolate">
-//                     <option value="Coconut">
-//                         <option value="Mint">
-//                             <option value="Strawberry">
-//                                 <option value="Vanilla">
-//                                 </datalist>
-//                                 )
-//                                 }
+                <tbody>
+                    {books.length > 0 ? (
+                        books.map((book) => (
+                            <tr key={book.id}>
+                                <td>{book.id}</td>
+                                <td>{book.name}</td>
+                                <td>{book.author}</td>
+                                <td>{book.label}</td>
+                                <td>{book.state}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={5}>No books found</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </>
+    );
+};
