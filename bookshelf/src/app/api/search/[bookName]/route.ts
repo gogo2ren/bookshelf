@@ -8,10 +8,11 @@ export async function GET(
   // { params }: { params: { bookName: string } },
 ) {
   // 🚧: DBに接続しレコードを取得する
-  const book = books
-  //   const book = books.find(
-  //   (book) => book.name === params.bookName,
-  // );
+  // const book = books
+    const book = books.find(
+    (book) => book.name === "独習C++"
+    // params.bookName,
+  );
   if (!book) {
     return Response.json({ message: "Not Found" }, { status: 400 });/* TODO:疎通確認できたら404に戻す */
   }
